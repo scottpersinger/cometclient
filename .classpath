@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="bayeux-api-2.3.1.jar"/>
+	<classpathentry kind="lib" path="cometd-java-client-2.3.1.jar"/>
+	<classpathentry kind="lib" path="cometd-java-common-2.3.1.jar"/>
+	<classpathentry kind="lib" path="jetty-client-7.4.4.v20110707.jar"/>
+	<classpathentry kind="lib" path="jetty-http-7.4.4.v20110707.jar"/>
+	<classpathentry kind="lib" path="jetty-io-7.4.4.v20110707.jar"/>
+	<classpathentry kind="lib" path="jetty-util-7.4.4.v20110707.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
