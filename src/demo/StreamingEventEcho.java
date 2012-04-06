@@ -73,6 +73,9 @@ public class StreamingEventEcho {
 	            @Override
 	            public void onMessage(ClientSessionChannel channel, Message message) {
                 	System.out.println("[EVENT] " + message.getJSON());
+                	System.out.println("-------------------------------------------------------------------------");
+                	System.out.println("-------------------------------------------------------------------------");
+                	System.out.flush();
 //	                try {
 //	                    System.out.println("Received Message: "
 //	                            + (new JSONObject(
