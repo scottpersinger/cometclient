@@ -64,7 +64,7 @@ public final class SoapLoginUtil {
 		return new String[] {parser.sessionId, endpoint.toString()};
 	}
 	private static String getSoapURL() throws MalformedURLException {
-		return new URL(StreamingClientExample.LOGIN_ENDPOINT +
+		return new URL(StreamingEventEcho.LOGIN_SERVER +
 				getSoapUri()).toExternalForm();
 	}
 	private static String getSoapUri() {

@@ -9,5 +9,8 @@
 	<classpathentry kind="lib" path="jetty-http-7.4.4.v20110707.jar"/>
 	<classpathentry kind="lib" path="jetty-io-7.4.4.v20110707.jar"/>
 	<classpathentry kind="lib" path="jetty-util-7.4.4.v20110707.jar"/>
+	<classpathentry kind="lib" path="mysql-connector-java-5.1.20-bin.jar"/>
+	<classpathentry kind="lib" path="gson-2.1.jar"/>
+	<classpathentry kind="lib" path="rabbitmq-client.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
