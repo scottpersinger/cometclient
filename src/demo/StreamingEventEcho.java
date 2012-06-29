@@ -165,12 +165,14 @@ public class StreamingEventEcho implements Runnable {
 						}
 	                	runListeners();
 	                } else if (command.matches("restart:\\d+")) {
+		                System.out.println("inside test 1");
 	                	Matcher m = Pattern.compile("restart:(\\d+)").matcher(command);
 	                	if (!m.matches()) {
 	                		System.out.println("That didnt match");
 	                		m = Pattern.compile(".*(\\d+).*").matcher(command);
 	                	}
 	                	String tid = m.group(1);
+		                System.out.println("calling restart listener");
 	                	restartListener(Long.parseLong(tid));
 	                }
 	                // (process the message components here ...)
@@ -292,6 +294,7 @@ public class StreamingEventEcho implements Runnable {
     	for (int i = 0; i < _listeners.size(); i++) {
     		StreamingEventEcho listener = _listeners.get(i);
     		if (listener._tenantId == tenant_id) {
+    			System.out.println("Restarting listener for tenant " + tenant_id);
     			listener.stop();
         		_listeners.remove(i);
         		// Reload list of objects to listen to
@@ -305,9 +308,8 @@ public class StreamingEventEcho implements Runnable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-        		
+        		break;
     		}
-    		break;
     	}
     }
     
