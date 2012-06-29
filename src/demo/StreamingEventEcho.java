@@ -161,7 +161,6 @@ public class StreamingEventEcho implements Runnable {
 	                	try {
 							loadTenants(dbUrl);
 						} catch (SQLException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 	                	runListeners();
