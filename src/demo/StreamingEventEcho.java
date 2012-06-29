@@ -176,6 +176,7 @@ public class StreamingEventEcho implements Runnable {
 	                	restartListener(Long.parseLong(tid));
 	                }
 	                // (process the message components here ...)
+	                System.out.println("Acking Rabbit cmd " + command);
 	                channel.basicAck(deliveryTag, false);
 	            }
         	}
@@ -294,12 +295,16 @@ public class StreamingEventEcho implements Runnable {
     	for (int i = 0; i < _listeners.size(); i++) {
     		StreamingEventEcho listener = _listeners.get(i);
     		if (listener._tenantId == tenant_id) {
-    			System.out.println("Restarting listener for tenant " + tenant_id);
+    			System.out.println("Stopping listener for tenant " + tenant_id);
     			listener.stop();
         		_listeners.remove(i);
         		// Reload list of objects to listen to
         		try {
 					ArrayList<String> objectList = loadObjectList(tenant_id, null);
+					System.out.println("Loaded new object list for tenant " + tenant_id + ": ");
+					for (String s : objectList) {
+						System.out.println("  " + s);
+					}
 					StreamingEventEcho newListener = new StreamingEventEcho(listener._tenantId, listener._tenantName, 
 	    	    			listener._sfConfig, listener._sfOauth, objectList); 
 	    	    	_listeners.add(newListener);
