@@ -173,7 +173,7 @@ public class StreamingEventEcho implements Runnable {
 	                	}
 	                	String tid = m.group(1);
 		                System.out.println("calling restart listener");
-	                	restartListener(Long.parseLong(tid));
+	                	//restartListener(Long.parseLong(tid));
 	                }
 	                // (process the message components here ...)
 	                System.out.println("Acking Rabbit cmd " + command);
