@@ -133,7 +133,7 @@ public class StreamingEventEcho implements Runnable {
     		}
     	}, 1000*60*55L, 1000*60*55L);
     	
-        //runListeners();
+        runListeners();
         
         System.out.println("Consuming from queue: " + queue);
         channel.basicConsume(queue, false, 
@@ -184,7 +184,6 @@ public class StreamingEventEcho implements Runnable {
         	}
         );
     	
-        /*
         while (true) {
         	System.out.println(">> Waiting for messages to publish");
         	Object[] message = publishQueue.take();
@@ -192,7 +191,7 @@ public class StreamingEventEcho implements Runnable {
         	String body = (String)message[1];
         	String msg = message[0] + ":" + body;
         	channel.basicPublish(exchange, "sfpush.data", null, msg.getBytes("UTF-8"));
-        }*/
+        }
     }
     
     private static void loadTenants(String dbConn) throws SQLException {
