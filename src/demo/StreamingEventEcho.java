@@ -136,7 +136,7 @@ public class StreamingEventEcho implements Runnable {
         //runListeners();
         
         System.out.println("Consuming from queue: " + queue);
-        channel.basicConsume(queue, true, 
+        channel.basicConsume(queue, false, 
         	new DefaultConsumer(channel) {
 	        	@Override
 	            public void handleDelivery(String consumerTag,
