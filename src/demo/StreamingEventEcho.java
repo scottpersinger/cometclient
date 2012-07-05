@@ -121,6 +121,7 @@ public class StreamingEventEcho implements Runnable {
     	channel.queueDeclare(queue, true, true, false, null);
     	channel.queueDeclare(dataQueue, true, false, false, null);
     	System.out.println("Binding queue "+ queue + " to exchange " + exchange);
+    	// Bind for consuming commands, use same name for queue and routing key
     	channel.queueBind(queue, exchange, queue);
     	
     	// Create timer to reconnect to the Streaming API every hour or so
@@ -132,7 +133,7 @@ public class StreamingEventEcho implements Runnable {
     		}
     	}, 1000*60*55L, 1000*60*55L);
     	
-        runListeners();
+        //runListeners();
         
         System.out.println("Consuming from queue: " + queue);
         channel.basicConsume(queue, true, 
@@ -178,14 +179,15 @@ public class StreamingEventEcho implements Runnable {
 	                // (process the message components here ...)
 	                System.out.println("Acking Rabbit cmd " + command);
 	                channel.basicAck(deliveryTag, false);
+	                System.out.println("Ack done. Returning from handleDelivery");
 	            }
         	}
         );
     	
         while (true) {
-        	System.out.println("Waiting for messages to publish");
+        	System.out.println(">> Waiting for messages to publish");
         	Object[] message = publishQueue.take();
-        	System.out.println("Got message: " + message[1]);
+        	System.out.println("<< Got message: " + message[1]);
         	String body = (String)message[1];
         	String msg = message[0] + ":" + body;
         	channel.basicPublish(exchange, "sfpush.data", null, msg.getBytes("UTF-8"));
