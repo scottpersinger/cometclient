@@ -3,4 +3,4 @@ export CLASSPATH=$CLASSPATH:./bayeux-api-2.3.1.jar:./cometd-java-client-2.3.1.ja
 echo $CLASSPATH
 echo "Usage: StreamingEventEcho <dburl> <rabbiturl> <clientId> <clientSecret>"
 #java demo.StreamingEventEcho $@
-java demo.StreamingEventEcho "jdbc:mysql://localhost/cloud5?user=root&password=" "amqp://localhost" "3MVG9rFJvQRVOvk7dcW8zRXD4lv7ZdT638O2Ti7hrGGo2Oa7iFCoyabLryNhGv_j2x9yo0Ea6.VmqzUR6LDgD" "7176140918132069100"
+java demo.StreamingEventEcho "jdbc:mysql://localhost/cloud5?user=root&password=" "amqp://guest@beta.cloudconnect.com:5672/test" "3MVG9rFJvQRVOvk7dcW8zRXD4lv7ZdT638O2Ti7hrGGo2Oa7iFCoyabLryNhGv_j2x9yo0Ea6.VmqzUR6LDgD" "7176140918132069100"

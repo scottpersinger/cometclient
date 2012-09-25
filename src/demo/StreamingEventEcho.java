@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -68,9 +69,9 @@ public class StreamingEventEcho implements Runnable {
     static String clientSecret;
     static ArrayList<StreamingEventEcho> _listeners = new ArrayList<StreamingEventEcho>();
     static Timer reconnectTimer = new Timer(true);
-    static BlockingQueue<Object[]> publishQueue = new LinkedBlockingQueue<Object[]>();
+    static BlockingQueue<JSONObject> publishQueue = new LinkedBlockingQueue<JSONObject>();
 	private static String queue = "sfpush.cmd";
-    private static String dataQueue = "sfpush.data";
+    private static String dataQueue = "celery";
     
         // The path for the Streaming API endpoint
     private static final String DEFAULT_PUSH_ENDPOINT = "/cometd/24.0";
@@ -119,7 +120,7 @@ public class StreamingEventEcho implements Runnable {
     	
     	System.out.println("Declaring queue: " + queue);
     	channel.queueDeclare(queue, true, true, false, null);
-    	channel.queueDeclare(dataQueue, true, false, false, null);
+    	//channel.queueDeclare(dataQueue, true, false, false, null);
     	System.out.println("Binding queue "+ queue + " to exchange " + exchange);
     	// Bind for consuming commands, use same name for queue and routing key
     	channel.queueBind(queue, exchange, queue);
@@ -186,11 +187,15 @@ public class StreamingEventEcho implements Runnable {
     	
         while (true) {
         	System.out.println(">> Waiting for messages to publish");
-        	Object[] message = publishQueue.take();
-        	System.out.println("<< Got message: " + message[1]);
-        	String body = (String)message[1];
-        	String msg = message[0] + ":" + body;
-        	channel.basicPublish(exchange, "sfpush.data", null, msg.getBytes("UTF-8"));
+        	JSONObject message = publishQueue.take();
+        	String body = message.toString();
+        	System.out.println("<< Got message: " + body);
+        	System.out.println("publishing to queue: " + dataQueue);
+        	AMQP.BasicProperties.Builder bob = new AMQP.BasicProperties.Builder();
+        	
+        	channel.basicPublish(dataQueue, dataQueue, 
+        			bob.contentType("application/json").build(), 
+        			body.getBytes("UTF-8"));
         }
     }
     
@@ -383,9 +388,22 @@ public class StreamingEventEcho implements Runnable {
 			        client.getChannel("/topic/" + topic).subscribe(new MessageListener() {
 			            @Override
 			            public void onMessage(ClientSessionChannel channel, Message message) {
-		                	System.out.println(_tenantId + ": [EVENT] " + message.getJSON());
-		                	Object[] payload = {_tenantId, message.getJSON()};
-		                	publishQueue.add(payload);
+			            	try {
+			                	System.out.println(_tenantId + ": [EVENT] " + message.getJSON());
+			                	// Bleh. Manually construct a Celery task message.
+			                	Map<String,Object> sfData = new HashMap<String,Object>();
+			                	sfData.put("channel", message.getChannel());
+			                	sfData.put("data", message.getDataAsMap());
+			                	JSONObject payload = new JSONObject();
+			                	payload.put("args", Arrays.asList(_tenantId, sfData));
+			                	payload.put("kwargs", new HashMap());
+			                	payload.put("id", UUID.randomUUID().toString());
+			                	payload.put("retries", "0");
+			                	payload.put("task", "mirror.tasks.handle_sf_update");
+			                	publishQueue.add(payload);
+			            	} catch (JSONException e) {
+			            		System.out.println(e.getLocalizedMessage());
+			            	}
 			            }
 			        });
 		        }
